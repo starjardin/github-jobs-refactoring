@@ -1,6 +1,6 @@
-import { ACTIONS } from '../constant/actions'
+import ACTIONS from '../constant/actions'
 
-function reducer(state,action) {
+export function reducer(state,action) {
   switch (action.type) {
     case ACTIONS.LOADING_STATE : {
       return {
