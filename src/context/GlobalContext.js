@@ -8,7 +8,7 @@ import ACTIONS from '../constant/actions'
 const GlobalContext = createContext()
 
 const initialState = {
-  description: "python",
+  description: "",
   location: "",
   search: "code",
   full_time: false,
@@ -20,7 +20,8 @@ const initialState = {
 
 
 function JobsContextProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [ state,dispatch ] = useReducer(reducer,initialState)
+  
   async function getJobsData() {
     try {
       const response = await axios.get(CORS_KEY + API_URL + `positions.json?description=${ state.description }&location=${ state.location }`)
@@ -32,30 +33,30 @@ function JobsContextProvider({ children }) {
     }
   }
 
-    //searching for jobs by key words, use this function
-    //function getJobsDataByKeyWords() {
-    //  axios
-    //    .get(CORS_KEY + API_URL + `positions.json?search=${state.search}`)
-    //    .then(response => {
-    //      dispatch({ type: ACTIONS.LOADING_STATE, payload : response.data })
-    //    })
-    //    .catch(error => {
-    //      dispatch({type : "FETCH_ERROR" })
-    //    })
-    //  return state.loading = true
-    //}
+  //searching for jobs by key words, use this function
+  function getJobsDataByKeyWords() {
+    axios
+      .get(CORS_KEY + API_URL + `positions.json?search=${state.search}`)
+      .then(response => {
+        dispatch({ type: ACTIONS.LOADING_STATE, payload : response.data })
+      })
+      .catch(error => {
+        dispatch({type : "FETCH_ERROR" })
+      })
+    return state.loading = true
+  }
 
     ////searching for jobs that are full time. use this function
-    //function getFulltimeJobs() {
-    //  axios
-    //    .get(CORS_KEY + API_URL + `positions.json?description=${state.description}&full_time=${state.full_time}&location=${state.location}`)
-    //    .then(response => {
-    //      dispatch({ type: ACTIONS.LOADING_STATE, payload: response.data })
-    //    })
-    //    .catch(error => {
-    //      dispatch({type : "FETCH_ERROR" })
-    //    })
-    //}
+  function getFulltimeJobs() {
+    axios
+      .get(CORS_KEY + API_URL + `positions.json?description=${state.description}&full_time=${state.full_time}&location=${state.location}`)
+      .then(response => {
+        dispatch({ type: ACTIONS.LOADING_STATE, payload: response.data })
+      })
+      .catch(error => {
+        dispatch({type : "FETCH_ERROR" })
+      })
+  }
   
   //fetch data when the app loads
   
@@ -67,21 +68,18 @@ function JobsContextProvider({ children }) {
     }
   }, [])
 
-  //useEffect(() => {
-  //  getJobsData()
-  //}, [state.description])
+  useEffect(() => {
+    getJobsData()
+  }, [state.description, state.location])
 
-  //useEffect(() => {
-  //  getJobsData()
-  //}, [state.location])
+  useEffect(() => {
+    getFulltimeJobs()
+  }, [state.full_time])
 
-  //useEffect(() => {
-  //  getFulltimeJobs()
-  //}, [state.full_time])
-
-  //useEffect(() => {
-  //  getJobsDataByKeyWords()
-  //}, [state.search])
+  useEffect(() => {
+    getJobsDataByKeyWords()
+    console.log(state.search);
+  }, [state.search])
 
   // here we return our value that are going to be shared in other components
   return (

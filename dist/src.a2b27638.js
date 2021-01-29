@@ -37428,6 +37428,7 @@ function reducer(state, action) {
 
     case _actions.default.SEARCH_JOB_BY_KEY_WORDS:
       {
+        console.log(action.foundJobsByKeyWords);
         return { ...state,
           search: action.foundJobsByKeyWords,
           loading: false,
@@ -37438,8 +37439,6 @@ function reducer(state, action) {
 
     case _actions.default.SEARCH_BY_FULL_TIME_JOB:
       {
-        console.log(action.fullTimeJobIsChecked);
-
         if (action.fullTimeJobIsChecked) {
           return { ...state,
             loading: false,
@@ -37515,7 +37514,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 const GlobalContext = (0, _react.createContext)();
 exports.GlobalContext = GlobalContext;
 const initialState = {
-  description: "python",
+  description: "",
   location: "",
   search: "code",
   full_time: false,
@@ -37545,29 +37544,36 @@ function JobsContextProvider({
       });
     }
   } //searching for jobs by key words, use this function
-  //function getJobsDataByKeyWords() {
-  //  axios
-  //    .get(CORS_KEY + API_URL + `positions.json?search=${state.search}`)
-  //    .then(response => {
-  //      dispatch({ type: ACTIONS.LOADING_STATE, payload : response.data })
-  //    })
-  //    .catch(error => {
-  //      dispatch({type : "FETCH_ERROR" })
-  //    })
-  //  return state.loading = true
-  //}
-  ////searching for jobs that are full time. use this function
-  //function getFulltimeJobs() {
-  //  axios
-  //    .get(CORS_KEY + API_URL + `positions.json?description=${state.description}&full_time=${state.full_time}&location=${state.location}`)
-  //    .then(response => {
-  //      dispatch({ type: ACTIONS.LOADING_STATE, payload: response.data })
-  //    })
-  //    .catch(error => {
-  //      dispatch({type : "FETCH_ERROR" })
-  //    })
-  //}
-  //fetch data when the app loads
+
+
+  function getJobsDataByKeyWords() {
+    _axios.default.get(_keys.CORS_KEY + _keys.API_URL + `positions.json?search=${state.search}`).then(response => {
+      dispatch({
+        type: _actions.default.LOADING_STATE,
+        payload: response.data
+      });
+    }).catch(error => {
+      dispatch({
+        type: "FETCH_ERROR"
+      });
+    });
+
+    return state.loading = true;
+  } ////searching for jobs that are full time. use this function
+
+
+  function getFulltimeJobs() {
+    _axios.default.get(_keys.CORS_KEY + _keys.API_URL + `positions.json?description=${state.description}&full_time=${state.full_time}&location=${state.location}`).then(response => {
+      dispatch({
+        type: _actions.default.LOADING_STATE,
+        payload: response.data
+      });
+    }).catch(error => {
+      dispatch({
+        type: "FETCH_ERROR"
+      });
+    });
+  } //fetch data when the app loads
 
 
   (0, _react.useEffect)(() => {
@@ -37576,19 +37582,17 @@ function JobsContextProvider({
     return () => {
       isCanceled = true;
     };
-  }, []); //useEffect(() => {
-  //  getJobsData()
-  //}, [state.description])
-  //useEffect(() => {
-  //  getJobsData()
-  //}, [state.location])
-  //useEffect(() => {
-  //  getFulltimeJobs()
-  //}, [state.full_time])
-  //useEffect(() => {
-  //  getJobsDataByKeyWords()
-  //}, [state.search])
-  // here we return our value that are going to be shared in other components
+  }, []);
+  (0, _react.useEffect)(() => {
+    getJobsData();
+  }, [state.description, state.location]);
+  (0, _react.useEffect)(() => {
+    getFulltimeJobs();
+  }, [state.full_time]);
+  (0, _react.useEffect)(() => {
+    getJobsDataByKeyWords();
+    console.log(state.search);
+  }, [state.search]); // here we return our value that are going to be shared in other components
 
   return /*#__PURE__*/_react.default.createElement(GlobalContext.Provider, {
     value: {
@@ -37823,16 +37827,16 @@ function Main({
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Time = exports.Location = exports.Frame = exports.Text = exports.Button = exports.Image = exports.Item = exports.ListContainer = exports.Link = exports.Container = void 0;
+exports.Time = exports.Location = exports.Frame = exports.Text = exports.Button = exports.Logo = exports.Item = exports.ListContainer = exports.Container = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const Container = _styledComponents.default.div``;
+const Container = _styledComponents.default.div`
+  padding : 1rem;
+`;
 exports.Container = Container;
-const Link = _styledComponents.default.a``;
-exports.Link = Link;
 const ListContainer = _styledComponents.default.ul`
   padding: 0;
 `;
@@ -37844,15 +37848,27 @@ const Item = _styledComponents.default.li`
   background: #FFFFFF;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
-  display : flex;
-  gap : 2rem;
+  
+  a {
+    display : flex;
+    gap : 2rem;
+    text-decoration : none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    color: #334680;
+  }
 `;
 exports.Item = Item;
-const Image = _styledComponents.default.img`
+const Logo = _styledComponents.default.img`
   width : 15%;
-  max-height : 7rem;
+  max-height : 15%;
+  background-image : url(${({
+  src
+}) => src});
 `;
-exports.Image = Image;
+exports.Logo = Logo;
 const Button = _styledComponents.default.button`
   border: 1px solid #334680;
   box-sizing: border-box;
@@ -37903,7 +37919,7 @@ ListOfJobs.Item = function ListOfJobsItem({
 }) {
   return /*#__PURE__*/_react.default.createElement(_listOfJobs.Item, restProps, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: `/job/${item.id}`
-  }, /*#__PURE__*/_react.default.createElement(_listOfJobs.Image, {
+  }, /*#__PURE__*/_react.default.createElement(_listOfJobs.Logo, {
     src: item.company_logo,
     alt: "Logo"
   }), /*#__PURE__*/_react.default.createElement(_listOfJobs.Frame, null, /*#__PURE__*/_react.default.createElement(_listOfJobs.Text, null, item.location), /*#__PURE__*/_react.default.createElement(_listOfJobs.Text, null, item.title), /*#__PURE__*/_react.default.createElement(_listOfJobs.Button, null, item.type))));
@@ -37935,7 +37951,7 @@ ListOfJobs.ListContainer = function ListOfJobsListContainer({
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Title = exports.Heading = exports.LeftPannel = exports.RightPannel = exports.Application = exports.Frame = exports.Text = exports.Container = void 0;
+exports.Logo = exports.Button = exports.Title = exports.Heading = exports.LeftPannel = exports.RightPannel = exports.Application = exports.Frame = exports.Text = exports.Container = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -37943,23 +37959,61 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const Container = _styledComponents.default.div``;
 exports.Container = Container;
-const Text = _styledComponents.default.div``;
+const Text = _styledComponents.default.div`
+  color : #334680;
+  ul {
+    padding: 0;
+    li {
+      list-style : none;
+    }
+  }
+  
+  a {
+    text-decoration : none;
+    color : #334680;
+  }
+`;
 exports.Text = Text;
 const Frame = _styledComponents.default.div`
   display: flex;
   gap : 2rem;
 `;
 exports.Frame = Frame;
-const Application = _styledComponents.default.div``;
+const Application = _styledComponents.default.div`
+  a {
+    text-decoration : none;
+    color : #334680;
+  }
+`;
 exports.Application = Application;
-const RightPannel = _styledComponents.default.div``;
+const RightPannel = _styledComponents.default.div`
+  
+`;
 exports.RightPannel = RightPannel;
-const LeftPannel = _styledComponents.default.div``;
+const LeftPannel = _styledComponents.default.div`
+`;
 exports.LeftPannel = LeftPannel;
-const Heading = _styledComponents.default.div``;
+const Heading = _styledComponents.default.div`
+`;
 exports.Heading = Heading;
-const Title = _styledComponents.default.h3``;
+const Title = _styledComponents.default.h3`
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  color: #334680;
+`;
 exports.Title = Title;
+const Button = _styledComponents.default.button``;
+exports.Button = Button;
+const Logo = _styledComponents.default.div`
+  width : 52px;
+  height : 52px;
+  background-image : url(${({
+  src
+}) => src});
+`;
+exports.Logo = Logo;
 },{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/jobDetails/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -38029,6 +38083,20 @@ JobDetails.Title = function JobDetailsTitle({
 }) {
   return /*#__PURE__*/_react.default.createElement(_jobDetails.Title, restProps, children);
 };
+
+JobDetails.Button = function JobDetailsButton({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_jobDetails.Button, restProps, children);
+};
+
+JobDetails.Logo = function JobDetailsLogo({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_jobDetails.Logo, restProps, children);
+};
 },{"react":"node_modules/react/index.js","./styles/jobDetails":"src/components/jobDetails/styles/jobDetails.js"}],"src/components/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -38085,19 +38153,46 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = HeaderContainer;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-var _components = require("../components/");
+var _components = require("../components");
+
+var _GlobalContext = require("../context/GlobalContext");
+
+var _actions = _interopRequireDefault(require("../constant/actions"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function HeaderContainer() {
-  return /*#__PURE__*/_react.default.createElement(_components.Header, null, /*#__PURE__*/_react.default.createElement(_components.Header.Heading, null, "Hello World"), /*#__PURE__*/_react.default.createElement(_components.Header.Frame, null, /*#__PURE__*/_react.default.createElement(_components.Search.Form, null, /*#__PURE__*/_react.default.createElement(_components.Search.Frame, null, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
+  const {
+    dispatch
+  } = (0, _react.useContext)(_GlobalContext.GlobalContext);
+
+  function handleSearchByKeyWords(e) {
+    e.preventDefault();
+    const keyWords = e.target.keywords.value;
+    dispatch({
+      type: _actions.default.SEARCH_JOB_BY_KEY_WORDS,
+      foundJobsByKeyWords: keyWords
+    });
+  }
+
+  return /*#__PURE__*/_react.default.createElement(_components.Header, null, /*#__PURE__*/_react.default.createElement(_components.Header.Heading, null, "Hello World"), /*#__PURE__*/_react.default.createElement(_components.Header.Frame, null, /*#__PURE__*/_react.default.createElement(_components.Search.Form, {
+    onSubmit: handleSearchByKeyWords
+  }, /*#__PURE__*/_react.default.createElement(_components.Search.Frame, null, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
     type: "text",
-    placeholder: "title, companies, expertise"
-  }), /*#__PURE__*/_react.default.createElement(_components.Search.Button, null, "Search")))));
+    placeholder: "title, companies, expertise",
+    autofill: "off",
+    name: "keywords"
+  }), /*#__PURE__*/_react.default.createElement(_components.Search.Button, {
+    type: "submit"
+  }, "Search")))));
 }
-},{"react":"node_modules/react/index.js","../components/":"src/components/index.js"}],"src/containers/searchContainer.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../components":"src/components/index.js","../context/GlobalContext":"src/context/GlobalContext.js","../constant/actions":"src/constant/actions.js"}],"src/containers/searchContainer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38105,22 +38200,49 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = SearchContainer;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _components = require("../components");
 
+var _GlobalContext = require("../context/GlobalContext");
+
+var _actions = _interopRequireDefault(require("../constant/actions.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function SearchContainer() {
+  const {
+    dispatch
+  } = (0, _react.useContext)(_GlobalContext.GlobalContext);
+
+  function handleSearchjobsByLocation(e) {
+    e.preventDefault();
+    const location = e.target.location.value;
+    dispatch({
+      type: _actions.default.SEARCH_JOB_BY_LOCATION,
+      foundJobsByLocation: location
+    });
+  }
+
   return /*#__PURE__*/_react.default.createElement(_components.Search, null, /*#__PURE__*/_react.default.createElement(_components.Search.Form, null, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
     type: "checkbox"
-  })), /*#__PURE__*/_react.default.createElement(_components.Search.Form, null, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
+  })), /*#__PURE__*/_react.default.createElement(_components.Search.Form, {
+    onSubmit: handleSearchjobsByLocation
+  }, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
     type: "text",
+    name: "location",
     placeholder: "city, state, zip code or country",
-    shadow: "2px 2px 2px 2px #ccc"
-  })));
+    shadow: "2px 2px 2px 2px #ccc",
+    autofill: "off"
+  }), /*#__PURE__*/_react.default.createElement(_components.Search.Button, {
+    type: "submit"
+  }, "Serch")));
 }
-},{"react":"node_modules/react/index.js","../components":"src/components/index.js"}],"src/containers/listOfJobsContainer.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../components":"src/components/index.js","../context/GlobalContext":"src/context/GlobalContext.js","../constant/actions.js":"src/constant/actions.js"}],"src/containers/listOfJobsContainer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38179,28 +38301,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = Home;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _headerContainer = _interopRequireDefault(require("../containers/headerContainer"));
 
 var _mainContainer = _interopRequireDefault(require("../containers/mainContainer"));
 
-var _GlobalContext = require("../context/GlobalContext");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 function Home() {
-  const {
-    state
-  } = (0, _react.useContext)(_GlobalContext.GlobalContext);
-  console.log(state);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_headerContainer.default, null), /*#__PURE__*/_react.default.createElement(_mainContainer.default, null));
 }
-},{"react":"node_modules/react/index.js","../containers/headerContainer":"src/containers/headerContainer.js","../containers/mainContainer":"src/containers/mainContainer.js","../context/GlobalContext":"src/context/GlobalContext.js"}],"src/containers/jobDetailsContainer.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../containers/headerContainer":"src/containers/headerContainer.js","../containers/mainContainer":"src/containers/mainContainer.js"}],"src/containers/jobDetailsContainer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38250,7 +38362,11 @@ function JobDetailsContainer() {
     to: "/"
   }, "Back to search"), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Application, {
     dangerouslySetInnerHTML: createMarkup(singleJobDetails.how_to_apply)
-  })), /*#__PURE__*/_react.default.createElement(_components.JobDetails.RightPannel, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Title, null, singleJobDetails.title), /*#__PURE__*/_react.default.createElement(_components.ListOfJobs.Image, null), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Text, {
+  })), /*#__PURE__*/_react.default.createElement(_components.JobDetails.RightPannel, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Title, null, singleJobDetails.title, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Button, null, singleJobDetails.type)), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Frame, {
+    direction: "column"
+  }, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Logo, {
+    src: singleJobDetails.company_logo
+  }), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Text, null, singleJobDetails.location)), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Text, {
     dangerouslySetInnerHTML: createMarkup(singleJobDetails.description)
   }))));
 }

@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
-export const Container = styled.div``
-export const Link = styled.a``
+export const Container = styled.div`
+  padding : 1rem;
+`
 
 export const ListContainer = styled.ul`
   padding: 0;
@@ -13,13 +14,23 @@ export const Item = styled.li`
   background: #FFFFFF;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
-  display : flex;
-  gap : 2rem;
+  
+  a {
+    display : flex;
+    gap : 2rem;
+    text-decoration : none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    color: #334680;
+  }
 `
 
-export const Image = styled.img`
+export const Logo = styled.img`
   width : 15%;
-  max-height : 7rem;
+  max-height : 15%;
+  background-image : url(${({src}) => src});
 `
 
 export const Button = styled.button`

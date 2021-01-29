@@ -39,8 +39,12 @@ export default function JobDetailsContainer() {
         <JobDetails.RightPannel>
           <JobDetails.Title>
             { singleJobDetails.title }
+            <JobDetails.Button>{ singleJobDetails.type }</JobDetails.Button>
           </JobDetails.Title>
-          <ListOfJobs.Image />
+          <JobDetails.Frame direction="column">
+            <JobDetails.Logo src={ singleJobDetails.company_logo } />
+            <JobDetails.Text>{singleJobDetails.location}</JobDetails.Text>
+          </JobDetails.Frame>
           <JobDetails.Text
             dangerouslySetInnerHTML={createMarkup(singleJobDetails.description)}
           />

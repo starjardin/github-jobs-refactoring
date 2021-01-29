@@ -8,7 +8,9 @@ import {
   Title,
   Frame,
   RightPannel,
-  LeftPannel
+  LeftPannel,
+  Button,
+  Logo
 } from './styles/jobDetails'
 
 export default function JobDetails({ children,...restProps }) {
@@ -44,4 +46,12 @@ JobDetails.Heading = function JobDetailsHeading({ children,...restProps }) {
 
 JobDetails.Title = function JobDetailsTitle({ children,...restProps }) {
   return <Title {...restProps}>{ children }</Title>
+}
+
+JobDetails.Button = function JobDetailsButton({ children,...restProps }) {
+  return <Button {...restProps}>{ children }</Button>
+}
+
+JobDetails.Logo = function JobDetailsLogo({ children,...restProps }) {
+  return <Logo {...restProps}>{ children }</Logo>
 }

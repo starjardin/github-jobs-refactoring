@@ -3,7 +3,7 @@ import { Link as ReachRouterLink } from 'react-router-dom'
 import {
   Container,
   Item,
-  Image,
+  Logo,
   Button,
   Text,
   Location,
@@ -20,7 +20,7 @@ ListOfJobs.Item = function ListOfJobsItem({ item,...restProps }) {
   return (
     <Item { ...restProps }>
       <ReachRouterLink to={ `/job/${item.id}`}>
-        <Image src={ item.company_logo } alt="Logo" />
+        <Logo src={ item.company_logo } alt="Logo" />
         <Frame>
           <Text>{ item.location }</Text>
           <Text>{ item.title }</Text>

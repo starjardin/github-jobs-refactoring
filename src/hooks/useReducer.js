@@ -12,7 +12,8 @@ export function reducer(state,action) {
     case ACTIONS.FETCH_ERROR : return {
       ...state, error : "Something went wrong🥱!! try again"
     }
-    case ACTIONS.SEARCH_JOB_BY_KEY_WORDS : {
+    case ACTIONS.SEARCH_JOB_BY_KEY_WORDS: {
+      console.log(action.foundJobsByKeyWords);
       return {
         ...state,
         search: action.foundJobsByKeyWords,
@@ -22,7 +23,6 @@ export function reducer(state,action) {
       }
     }
     case ACTIONS.SEARCH_BY_FULL_TIME_JOB: {
-      console.log(action.fullTimeJobIsChecked);
       if (action.fullTimeJobIsChecked) {
         return {
           ...state,
