@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 
+import HeaderContainer from './containers/headerContainer'
 import { GlobalContext } from './context/GlobalContext'
 
 export default function App() {
@@ -7,8 +8,6 @@ export default function App() {
   const { state } = useContext(GlobalContext)
   console.log(state);
   return (
-    <h2>
-      Hello world
-    </h2>
+    <HeaderContainer />
   )
 }
