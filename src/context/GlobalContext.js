@@ -58,8 +58,13 @@ function JobsContextProvider({ children }) {
     //}
   
   //fetch data when the app loads
+  
   useEffect(() => {
-    getJobsData()
+    let isCanceled = false;
+    !isCanceled && getJobsData()
+    return () => {
+      isCanceled = true;
+    }
   }, [])
 
   //useEffect(() => {

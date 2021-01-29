@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div``
+export const Link = styled.a``
 
 export const ListContainer = styled.ul`
   padding: 0;

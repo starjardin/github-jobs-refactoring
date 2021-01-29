@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link as ReachRouterLink } from 'react-router-dom'
 import {
   Container,
   Item,
@@ -17,14 +17,18 @@ export default function ListOfJobs({ children,...restProps }) {
 }
 
 ListOfJobs.Item = function ListOfJobsItem({ item,...restProps }) {
-  return <Item { ...restProps }>
-    <Image src={ item.company_logo } alt="Logo" />
-    <Frame>
-      <Text>{ item.location }</Text>
-      <Text>{ item.title }</Text>
-      <Button>{ item.type }</Button>
-    </Frame>
-  </Item>
+  return (
+    <Item { ...restProps }>
+      <ReachRouterLink to={ `/job/${item.id}`}>
+        <Image src={ item.company_logo } alt="Logo" />
+        <Frame>
+          <Text>{ item.location }</Text>
+          <Text>{ item.title }</Text>
+          <Button>{ item.type }</Button>
+        </Frame>
+      </ReachRouterLink>
+    </Item>
+  )
 }
 
 ListOfJobs.Location = function ListOfJobsLocation({children, ...restProps}) {
