@@ -7,13 +7,15 @@ export default function HeaderContainer() {
     <Header>
       <Header.Heading>Hello World</Header.Heading>
       <Header.Frame>
-        <Search.Frame>
-          <Search.Input
-            type="text"
-            placeholder="title, companies, expertise"
-          />
-          <Search.Button>Search</Search.Button>
-        </Search.Frame>
+        <Search.Form>
+          <Search.Frame>
+            <Search.Input
+              type="text"
+              placeholder="title, companies, expertise"
+            />
+            <Search.Button>Search</Search.Button>
+          </Search.Frame>
+        </Search.Form>
       </Header.Frame>
     </Header>
   )

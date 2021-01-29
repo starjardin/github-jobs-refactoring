@@ -1,13 +1,12 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
-import HeaderContainer from './containers/headerContainer'
-import { GlobalContext } from './context/GlobalContext'
+import Home from './pages/home'
 
 export default function App() {
   
-  const { state } = useContext(GlobalContext)
-  console.log(state);
   return (
-    <HeaderContainer />
+    <>
+      <Home />
+    </>
   )
 }

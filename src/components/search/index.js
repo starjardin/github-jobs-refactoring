@@ -11,7 +11,7 @@ import {
 
 export default function Search ({children, ...restProps}) {
   return (
-    <Container { ...restProps }></Container>
+    <Container { ...restProps }>{children}</Container>
   )
 }
 

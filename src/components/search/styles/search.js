@@ -9,6 +9,7 @@ export const Input = styled.input`
   width : 60%;
   margin-bottom : 10px;
   border : 1px #fff solid;
+  box-shadow : ${({shadow}) => shadow};
   &:focus, &:hover {
     outline : none;
     border : 1px #ccc solid;
@@ -39,18 +40,10 @@ export const Frame = styled.div`
   justify-content : space-between;
   align-items : center;
   background-color : #fff;
+  max-width : 1300px;
   width : 100%;
   margin : auto;
   padding-block : 1rem;
   border-radius : 5px;
   flex-wrap : wrap;
 `
-
-
-  //div {
-  //  flex-wrap : wrap;
-  //  display : flex;
-  //  justify-content : space-between;
-  //  align-items : center;
-  //  padding : 0rem 1rem;
-  //}
