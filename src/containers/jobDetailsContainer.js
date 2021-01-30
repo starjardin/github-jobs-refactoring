@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from "react-router-dom"
 import axios from "axios"
 
-import { JobDetails, ListOfJobs } from "../components"
+import { JobDetails } from "../components"
 import { CORS_KEY,API_URL } from '../constant/keys'
+import { GlobalContext } from '../context/GlobalContext'
 
 export default function JobDetailsContainer() {
   const { jobId } = useParams()
+  const { state } = useContext(GlobalContext)
+  const { loading } = state
   const [singleJobDetails, setSingleJobDetails] = useState({})
 
   function getJobsData() {
@@ -28,28 +31,32 @@ export default function JobDetailsContainer() {
 
   
   return (
-    <JobDetails>
-      <JobDetails.Frame>
-        <JobDetails.LeftPannel>
-          <Link to="/">Back to search</Link>
-          <JobDetails.Application
-            dangerouslySetInnerHTML={createMarkup(singleJobDetails.how_to_apply)}
-          />
-        </JobDetails.LeftPannel>
-        <JobDetails.RightPannel>
-          <JobDetails.Title>
-            { singleJobDetails.title }
-            <JobDetails.Button>{ singleJobDetails.type }</JobDetails.Button>
-          </JobDetails.Title>
-          <JobDetails.Frame direction="column">
-            <JobDetails.Logo src={ singleJobDetails.company_logo } />
-            <JobDetails.Text>{singleJobDetails.location}</JobDetails.Text>
+    loading
+      ? <h2>Loading....</h2>
+      : (
+        <JobDetails>
+          <JobDetails.Frame>
+            <JobDetails.LeftPannel>
+              <Link to="/">Back to search</Link>
+              <JobDetails.Application
+                dangerouslySetInnerHTML={createMarkup(singleJobDetails.how_to_apply)}
+              />
+            </JobDetails.LeftPannel>
+            <JobDetails.RightPannel>
+              <JobDetails.Title>
+                { singleJobDetails.title }
+                <JobDetails.Button>{ singleJobDetails.type }</JobDetails.Button>
+              </JobDetails.Title>
+              <JobDetails.Frame direction="column">
+                <JobDetails.Logo src={ singleJobDetails.company_logo } />
+                <JobDetails.Text>{singleJobDetails.location}</JobDetails.Text>
+              </JobDetails.Frame>
+              <JobDetails.Text
+                dangerouslySetInnerHTML={createMarkup(singleJobDetails.description)}
+              />
+            </JobDetails.RightPannel>
           </JobDetails.Frame>
-          <JobDetails.Text
-            dangerouslySetInnerHTML={createMarkup(singleJobDetails.description)}
-          />
-        </JobDetails.RightPannel>
-      </JobDetails.Frame>
-    </JobDetails>
+        </JobDetails>
+        )
   )
 }

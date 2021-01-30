@@ -1,11 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Search } from '../components'
 import { GlobalContext } from '../context/GlobalContext'
 import ACTIONS from '../constant/actions.js'
 
 export default function SearchContainer() {
-  const { dispatch } = useContext(GlobalContext)
+  const { state,dispatch } = useContext(GlobalContext)
+  const [jobsByGivenLocation, setJobsByGivenLocation] = useState(state.location)
+  
+  const cities = ["london", "Berlin", "canada", "new york"]
   
   function handleSearchjobsByLocation(e) {
     e.preventDefault()
@@ -16,6 +19,16 @@ export default function SearchContainer() {
       foundJobsByLocation : location
     })
   }
+  
+  function handleSearchJobsByGivenLoaction(e) {
+    setJobsByGivenLocation(e.target.value)
+    dispatch({ type: ACTIONS.SEARCH_JOB_BY_GIVEN_LOCATION, foundJobsByGivenLocation: e.target.value })
+  }
+  
+  useEffect(() => {
+    setJobsByGivenLocation(state.location)
+  }, [state.location])
+
   
   return (
     <Search>
@@ -32,7 +45,23 @@ export default function SearchContainer() {
           shadow="2px 2px 2px 2px #ccc"
           autofill="off"
         />
-        <Search.Button type="submit">Serch</Search.Button>
+        <Search.Button type="submit" display="none">Serch</Search.Button>
+      </Search.Form>
+      <Search.Form >
+        {cities.map((city, index) => (
+          <Search.InputContainer key={index}>
+            <Search.Label htmlFor={city} > {city} </Search.Label>
+            <Search.Input
+              type="radio"
+              id={city}
+              name="city"
+              value={city}
+              checked={city.trim().toLocaleLowerCase() === jobsByGivenLocation.toLocaleLowerCase().trim()}
+              onChange={handleSearchJobsByGivenLoaction}
+            />
+          </Search.InputContainer>
+        )) }
+        <Search.Button type="submit" display="none">Serch</Search.Button>
       </Search.Form>
     </Search>
   )

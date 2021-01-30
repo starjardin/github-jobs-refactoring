@@ -25,10 +25,8 @@ function JobsContextProvider({ children }) {
   async function getJobsData() {
     try {
       const response = await axios.get(CORS_KEY + API_URL + `positions.json?description=${ state.description }&location=${ state.location }`)
-      console.log(response);
       dispatch({ type: ACTIONS.LOADING_STATE, payload: response.data })
     } catch(error) {
-      console.log(error);
       dispatch({type : "FETCH_ERROR" })
     }
   }
@@ -43,7 +41,6 @@ function JobsContextProvider({ children }) {
       .catch(error => {
         dispatch({type : "FETCH_ERROR" })
       })
-    return state.loading = true
   }
 
     ////searching for jobs that are full time. use this function
@@ -78,7 +75,6 @@ function JobsContextProvider({ children }) {
 
   useEffect(() => {
     getJobsDataByKeyWords()
-    console.log(state.search);
   }, [state.search])
 
   // here we return our value that are going to be shared in other components

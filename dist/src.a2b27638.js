@@ -37532,13 +37532,11 @@ function JobsContextProvider({
   async function getJobsData() {
     try {
       const response = await _axios.default.get(_keys.CORS_KEY + _keys.API_URL + `positions.json?description=${state.description}&location=${state.location}`);
-      console.log(response);
       dispatch({
         type: _actions.default.LOADING_STATE,
         payload: response.data
       });
     } catch (error) {
-      console.log(error);
       dispatch({
         type: "FETCH_ERROR"
       });
@@ -37557,8 +37555,6 @@ function JobsContextProvider({
         type: "FETCH_ERROR"
       });
     });
-
-    return state.loading = true;
   } ////searching for jobs that are full time. use this function
 
 
@@ -37591,7 +37587,6 @@ function JobsContextProvider({
   }, [state.full_time]);
   (0, _react.useEffect)(() => {
     getJobsDataByKeyWords();
-    console.log(state.search);
   }, [state.search]); // here we return our value that are going to be shared in other components
 
   return /*#__PURE__*/_react.default.createElement(GlobalContext.Provider, {
@@ -37666,7 +37661,7 @@ Header.Frame = function HeaderFrame({
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Frame = exports.Icon = exports.Button = exports.Form = exports.Input = exports.Container = void 0;
+exports.Frame = exports.InputContainer = exports.Label = exports.Icon = exports.Button = exports.Form = exports.Input = exports.Container = void 0;
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
@@ -37678,7 +37673,9 @@ const Input = _styledComponents.default.input`
   border : none;
   padding : 1rem;
   margin-left : 1rem;
-  width : 60%;
+  width : ${({
+  width
+}) => width};
   margin-bottom : 10px;
   border : 1px #fff solid;
   box-shadow : ${({
@@ -37698,6 +37695,9 @@ const Button = _styledComponents.default.button`
   padding : 0.7rem 1.2rem;
   background-color : #1E86FF;
   border : none;
+  display : ${({
+  display
+}) => display};
   border-radius : 5px;
   cursor: pointer;
   color: #ffffff;
@@ -37710,6 +37710,15 @@ const Button = _styledComponents.default.button`
 exports.Button = Button;
 const Icon = _styledComponents.default.div``;
 exports.Icon = Icon;
+const Label = _styledComponents.default.label``;
+exports.Label = Label;
+const InputContainer = _styledComponents.default.div`
+  padding-inline : 10px;
+  &:first-child {
+   margin-top : 2rem;
+  }
+`;
+exports.InputContainer = InputContainer;
 const Frame = _styledComponents.default.div`
   display : flex;
   justify-content : space-between;
@@ -37749,6 +37758,13 @@ Search.Input = function SearchInput({ ...restProps
   return /*#__PURE__*/_react.default.createElement(_search.Input, restProps);
 };
 
+Search.InputContainer = function SearchInputContainer({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_search.InputContainer, restProps, " ", children, " ");
+};
+
 Search.Form = function SearchForm({
   children,
   ...restProps
@@ -37775,6 +37791,13 @@ Search.Frame = function SearchFrame({
   ...restProps
 }) {
   return /*#__PURE__*/_react.default.createElement(_search.Frame, restProps, children);
+};
+
+Search.Label = function SearchLabel({
+  children,
+  ...restProp
+}) {
+  return /*#__PURE__*/_react.default.createElement(_search.Label, restProp, " ", children, " ");
 };
 },{"react":"node_modules/react/index.js","./styles/search":"src/components/search/styles/search.js"}],"src/components/main/styles/main.js":[function(require,module,exports) {
 "use strict";
@@ -38216,8 +38239,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function SearchContainer() {
   const {
+    state,
     dispatch
   } = (0, _react.useContext)(_GlobalContext.GlobalContext);
+  const [jobsByGivenLocation, setJobsByGivenLocation] = (0, _react.useState)(state.location);
+  const cities = ["london", "Berlin", "canada", "new york"];
 
   function handleSearchjobsByLocation(e) {
     e.preventDefault();
@@ -38228,6 +38254,17 @@ function SearchContainer() {
     });
   }
 
+  function handleSearchJobsByGivenLoaction(e) {
+    setJobsByGivenLocation(e.target.value);
+    dispatch({
+      type: _actions.default.SEARCH_JOB_BY_GIVEN_LOCATION,
+      foundJobsByGivenLocation: e.target.value
+    });
+  }
+
+  (0, _react.useEffect)(() => {
+    setJobsByGivenLocation(state.location);
+  }, [state.location]);
   return /*#__PURE__*/_react.default.createElement(_components.Search, null, /*#__PURE__*/_react.default.createElement(_components.Search.Form, null, /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
     type: "checkbox"
   })), /*#__PURE__*/_react.default.createElement(_components.Search.Form, {
@@ -38239,10 +38276,190 @@ function SearchContainer() {
     shadow: "2px 2px 2px 2px #ccc",
     autofill: "off"
   }), /*#__PURE__*/_react.default.createElement(_components.Search.Button, {
-    type: "submit"
+    type: "submit",
+    display: "none"
+  }, "Serch")), /*#__PURE__*/_react.default.createElement(_components.Search.Form, null, cities.map((city, index) => /*#__PURE__*/_react.default.createElement(_components.Search.InputContainer, {
+    key: index
+  }, /*#__PURE__*/_react.default.createElement(_components.Search.Label, {
+    htmlFor: city
+  }, " ", city, " "), /*#__PURE__*/_react.default.createElement(_components.Search.Input, {
+    type: "radio",
+    id: city,
+    name: "city",
+    value: city,
+    checked: city.trim().toLocaleLowerCase() === jobsByGivenLocation.toLocaleLowerCase().trim(),
+    onChange: handleSearchJobsByGivenLoaction
+  }))), /*#__PURE__*/_react.default.createElement(_components.Search.Button, {
+    type: "submit",
+    display: "none"
   }, "Serch")));
 }
-},{"react":"node_modules/react/index.js","../components":"src/components/index.js","../context/GlobalContext":"src/context/GlobalContext.js","../constant/actions.js":"src/constant/actions.js"}],"src/containers/listOfJobsContainer.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","../components":"src/components/index.js","../context/GlobalContext":"src/context/GlobalContext.js","../constant/actions.js":"src/constant/actions.js"}],"node_modules/classnames/index.js":[function(require,module,exports) {
+var define;
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', [], function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+},{}],"node_modules/react-bootstrap/esm/ThemeProvider.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useBootstrapPrefix = useBootstrapPrefix;
+exports.createBootstrapComponent = createBootstrapComponent;
+exports.default = exports.ThemeConsumer = void 0;
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/extends"));
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ThemeContext = /*#__PURE__*/_react.default.createContext({});
+
+var Consumer = ThemeContext.Consumer,
+    Provider = ThemeContext.Provider;
+exports.ThemeConsumer = Consumer;
+
+function ThemeProvider(_ref) {
+  var prefixes = _ref.prefixes,
+      children = _ref.children;
+  var copiedPrefixes = (0, _react.useMemo)(function () {
+    return (0, _extends2.default)({}, prefixes);
+  }, [prefixes]);
+  return /*#__PURE__*/_react.default.createElement(Provider, {
+    value: copiedPrefixes
+  }, children);
+}
+
+function useBootstrapPrefix(prefix, defaultPrefix) {
+  var prefixes = (0, _react.useContext)(ThemeContext);
+  return prefix || prefixes[defaultPrefix] || defaultPrefix;
+}
+
+function createBootstrapComponent(Component, opts) {
+  if (typeof opts === 'string') opts = {
+    prefix: opts
+  };
+  var isClassy = Component.prototype && Component.prototype.isReactComponent; // If it's a functional component make sure we don't break it with a ref
+
+  var _opts = opts,
+      prefix = _opts.prefix,
+      _opts$forwardRefAs = _opts.forwardRefAs,
+      forwardRefAs = _opts$forwardRefAs === void 0 ? isClassy ? 'ref' : 'innerRef' : _opts$forwardRefAs;
+
+  var Wrapped = /*#__PURE__*/_react.default.forwardRef(function (_ref2, ref) {
+    var props = (0, _extends2.default)({}, _ref2);
+    props[forwardRefAs] = ref;
+    var bsPrefix = useBootstrapPrefix(props.bsPrefix, prefix);
+    return /*#__PURE__*/_react.default.createElement(Component, (0, _extends2.default)({}, props, {
+      bsPrefix: bsPrefix
+    }));
+  });
+
+  Wrapped.displayName = "Bootstrap(" + (Component.displayName || Component.name) + ")";
+  return Wrapped;
+}
+
+var _default = ThemeProvider;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/extends":"node_modules/@babel/runtime/helpers/esm/extends.js","react":"node_modules/react/index.js"}],"node_modules/react-bootstrap/esm/Spinner.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/extends"));
+
+var _objectWithoutPropertiesLoose2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose"));
+
+var _classnames = _interopRequireDefault(require("classnames"));
+
+var _react = _interopRequireDefault(require("react"));
+
+var _ThemeProvider = require("./ThemeProvider");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = /*#__PURE__*/_react.default.forwardRef(function (_ref, ref) {
+  var bsPrefix = _ref.bsPrefix,
+      variant = _ref.variant,
+      animation = _ref.animation,
+      size = _ref.size,
+      children = _ref.children,
+      _ref$as = _ref.as,
+      Component = _ref$as === void 0 ? 'div' : _ref$as,
+      className = _ref.className,
+      props = (0, _objectWithoutPropertiesLoose2.default)(_ref, ["bsPrefix", "variant", "animation", "size", "children", "as", "className"]);
+  bsPrefix = (0, _ThemeProvider.useBootstrapPrefix)(bsPrefix, 'spinner');
+  var bsSpinnerPrefix = bsPrefix + "-" + animation;
+  return /*#__PURE__*/_react.default.createElement(Component, (0, _extends2.default)({
+    ref: ref
+  }, props, {
+    className: (0, _classnames.default)(className, bsSpinnerPrefix, size && bsSpinnerPrefix + "-" + size, variant && "text-" + variant)
+  }), children);
+});
+
+Spinner.displayName = 'Spinner';
+var _default = Spinner;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/extends":"node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","classnames":"node_modules/classnames/index.js","react":"node_modules/react/index.js","./ThemeProvider":"node_modules/react-bootstrap/esm/ThemeProvider.js"}],"src/containers/listOfJobsContainer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38252,9 +38469,13 @@ exports.default = ListOfJobsContainer;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _Spinner = _interopRequireDefault(require("react-bootstrap/Spinner"));
+
 var _GlobalContext = require("../context/GlobalContext");
 
 var _components = require("../components/");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -38265,14 +38486,16 @@ function ListOfJobsContainer() {
     state
   } = (0, _react.useContext)(_GlobalContext.GlobalContext);
   const {
-    jobs
-  } = state;
-  return /*#__PURE__*/_react.default.createElement(_components.ListOfJobs, null, /*#__PURE__*/_react.default.createElement(_components.ListOfJobs.ListContainer, null, jobs.map(item => /*#__PURE__*/_react.default.createElement(_components.ListOfJobs.Item, {
+    jobs,
+    loading
+  } = state; //TODO: Spinner
+
+  return loading ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading....") : /*#__PURE__*/_react.default.createElement(_components.ListOfJobs, null, /*#__PURE__*/_react.default.createElement(_components.ListOfJobs.ListContainer, null, jobs.map(item => /*#__PURE__*/_react.default.createElement(_components.ListOfJobs.Item, {
     item: item,
     key: item.id
   }))));
 }
-},{"react":"node_modules/react/index.js","../context/GlobalContext":"src/context/GlobalContext.js","../components/":"src/components/index.js"}],"src/containers/mainContainer.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-bootstrap/Spinner":"node_modules/react-bootstrap/esm/Spinner.js","../context/GlobalContext":"src/context/GlobalContext.js","../components/":"src/components/index.js"}],"src/containers/mainContainer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38330,6 +38553,8 @@ var _components = require("../components");
 
 var _keys = require("../constant/keys");
 
+var _GlobalContext = require("../context/GlobalContext");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -38340,6 +38565,12 @@ function JobDetailsContainer() {
   const {
     jobId
   } = (0, _reactRouterDom.useParams)();
+  const {
+    state
+  } = (0, _react.useContext)(_GlobalContext.GlobalContext);
+  const {
+    loading
+  } = state;
   const [singleJobDetails, setSingleJobDetails] = (0, _react.useState)({});
 
   function getJobsData() {
@@ -38358,7 +38589,7 @@ function JobDetailsContainer() {
     };
   }
 
-  return /*#__PURE__*/_react.default.createElement(_components.JobDetails, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Frame, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.LeftPannel, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+  return loading ? /*#__PURE__*/_react.default.createElement("h2", null, "Loading....") : /*#__PURE__*/_react.default.createElement(_components.JobDetails, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.Frame, null, /*#__PURE__*/_react.default.createElement(_components.JobDetails.LeftPannel, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
     to: "/"
   }, "Back to search"), /*#__PURE__*/_react.default.createElement(_components.JobDetails.Application, {
     dangerouslySetInnerHTML: createMarkup(singleJobDetails.how_to_apply)
@@ -38370,7 +38601,7 @@ function JobDetailsContainer() {
     dangerouslySetInnerHTML: createMarkup(singleJobDetails.description)
   }))));
 }
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","axios":"node_modules/axios/index.js","../components":"src/components/index.js","../constant/keys":"src/constant/keys.js"}],"src/pages/jobDetails.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","axios":"node_modules/axios/index.js","../components":"src/components/index.js","../constant/keys":"src/constant/keys.js","../context/GlobalContext":"src/context/GlobalContext.js"}],"src/pages/jobDetails.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -38482,7 +38713,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63224" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49878" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

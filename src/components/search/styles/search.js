@@ -6,7 +6,7 @@ export const Input = styled.input`
   border : none;
   padding : 1rem;
   margin-left : 1rem;
-  width : 60%;
+  width : ${({width}) => width};
   margin-bottom : 10px;
   border : 1px #fff solid;
   box-shadow : ${({shadow}) => shadow};
@@ -23,6 +23,7 @@ export const Button = styled.button`
   padding : 0.7rem 1.2rem;
   background-color : #1E86FF;
   border : none;
+  display : ${({display}) => display};
   border-radius : 5px;
   cursor: pointer;
   color: #ffffff;
@@ -34,6 +35,13 @@ export const Button = styled.button`
 `
 
 export const Icon = styled.div``
+export const Label = styled.label``
+export const InputContainer = styled.div`
+  padding-inline : 10px;
+  &:first-child {
+   margin-top : 2rem;
+  }
+`
 
 export const Frame = styled.div`
   display : flex;
