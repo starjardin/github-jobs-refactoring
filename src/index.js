@@ -6,6 +6,7 @@ import { GlobalStyeles } from './global-styles'
 import { JobsContextProvider } from './context/GlobalContext'
 
 import App from './App'
+import context from 'react-bootstrap/esm/AccordionContext'
 
 render(
   <Router>

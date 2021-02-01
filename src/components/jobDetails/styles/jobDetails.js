@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
-export const Container = styled.div``
+export const Container = styled.div`
+  padding: 3rem 1rem;
+`
 export const Text = styled.div`
   color : #334680;
   ul {
@@ -18,6 +20,7 @@ export const Text = styled.div`
 export const Frame = styled.div`
   display: flex;
   gap : 2rem;
+  padding-bottom : ${({padding}) => padding}
 `
 export const Application = styled.div`
   a {
@@ -29,6 +32,10 @@ export const RightPannel = styled.div`
   
 `
 export const LeftPannel = styled.div`
+  & > div > a {
+    display: inline-block;
+    padding-bottom : 3rem;
+  }
 `
 export const Heading = styled.div`
 `
@@ -39,7 +46,9 @@ export const Title = styled.h3`
   line-height: 28px;
   color: #334680;
 `
-export const Button = styled.button``
+export const Button = styled.button`
+
+`
 export const Logo = styled.div`
   width : 52px;
   height : 52px;

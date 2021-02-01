@@ -18,7 +18,7 @@ export default function HeaderContainer() {
   
   return (
     <Header>
-      <Header.Heading>Hello World</Header.Heading>
+      <Header.Heading>Githib Jobs</Header.Heading>
       <Header.Frame>
         <Search.Form onSubmit={handleSearchByKeyWords}>
           <Search.Frame>
