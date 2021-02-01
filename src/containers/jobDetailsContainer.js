@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link, useParams } from "react-router-dom"
 import axios from "axios"
-import {BsArrowLeft} from 'react-icons/bs'
+import { BsArrowLeft } from 'react-icons/bs'
+import { formatDistance,subDays } from 'date-fns'
+
 
 import { Header, JobDetails } from "../components"
 import { CORS_KEY,API_URL } from '../constant/keys'
@@ -18,6 +20,7 @@ export default function JobDetailsContainer() {
       .get(CORS_KEY + API_URL + `positions/${jobId}.json`)
       .then(response => {
         setSingleJobDetails(response.data)
+        console.log(response.data);
       })
   }
 
@@ -52,10 +55,14 @@ export default function JobDetailsContainer() {
                 />
               </JobDetails.LeftPannel>
               <JobDetails.RightPannel>
-                <JobDetails.Title>
-                  { singleJobDetails.title }
-                  <JobDetails.Button>{ singleJobDetails.type }</JobDetails.Button>
-                </JobDetails.Title>
+                <JobDetails.Frame>
+                  <JobDetails.Title>
+                    { singleJobDetails.title }
+                  </JobDetails.Title>
+                  <JobDetails.Button>
+                    { singleJobDetails.type }
+                  </JobDetails.Button>
+                </JobDetails.Frame>
                 <JobDetails.Frame direction="column">
                   <JobDetails.Logo src={ singleJobDetails.company_logo } />
                   <JobDetails.Text>{singleJobDetails.location}</JobDetails.Text>
